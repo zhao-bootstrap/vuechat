@@ -10498,7 +10498,7 @@
 	var __vue_script__, __vue_template__
 	__webpack_require__(4)
 	__vue_script__ = __webpack_require__(8)
-	__vue_template__ = __webpack_require__(21)
+	__vue_template__ = __webpack_require__(33)
 	module.exports = __vue_script__ || {}
 	if (module.exports.__esModule) module.exports = module.exports.default
 	if (__vue_template__) { (typeof module.exports === "function" ? module.exports.options : module.exports).template = __vue_template__ }
@@ -10549,7 +10549,7 @@
 
 
 	// module
-	exports.push([module.id, "\n\t\t*, *:before, *:after {\n            box-sizing: border-box;\n        }\n        body, html {\n            height: 100%;\n            overflow: hidden;\n        }\n        body, ul {\n            margin: 0;\n            padding: 0;\n        }\n\n        ul {\n            list-style: none;\n        }\n\t\t.sideBar{\n\t\t\t\theight:100%;\n\t\t\t\twidth:200px;\n\t\t\t\tfloat: left;\n\t\t\t\tbottom:0;\n\t\t\t\tleft:0;\n\t\t\t}\n\t\t.main{\n\t\t\tmargin: 20px auto;\n\t        width: 800px;\n\t    \theight: 600px;\n\t\t\toverflow: hidden;\n\t\t\tborder-radius:3px;\n\n\n\t\t}\n\n", ""]);
+	exports.push([module.id, "\n\t\t*, *:before, *:after {\n            box-sizing: border-box;\n        }\n        body, html {\n            height: 100%;\n            overflow: hidden;\n        }\n        body, ul {\n            margin: 0;\n            padding: 0;\n        }\n\n        ul {\n            list-style: none;\n        }\n\t\t.sideBar{\n\t\t\theight:100%;\n\t\t\twidth:200px;\n\t\t\tfloat: left;\n\t\t\tbottom:0;\n\t\t\tleft:0;\n\t\t\tbackground: #000;\n\t\t}\n        .m-text {\n            position: absolute;\n            width: 100%;\n            bottom: 0;\n            left: 0;\n        }\n        .m-message {\n            height: 440px;\n        }\n        .mainContent {\n            position: relative;\n            overflow: hidden;\n            background-color: #eee;\n        }\n\t\t.main{\n\t\t\tmargin: 20px auto;\n\t        width: 800px;\n\t    \theight: 600px;\n\t\t\toverflow: hidden;\n\t\t\tborder-radius:3px;\n\n\t\t}\n\n", ""]);
 
 	// exports
 
@@ -10884,6 +10884,14 @@
 
 	var _list2 = _interopRequireDefault(_list);
 
+	var _message = __webpack_require__(23);
+
+	var _message2 = _interopRequireDefault(_message);
+
+	var _text = __webpack_require__(28);
+
+	var _text2 = _interopRequireDefault(_text);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	// export default 等价于 new vue({})
@@ -10894,21 +10902,33 @@
 	    data: function data() {
 	        // 调用store 的方法
 	        var serverData = _store2.default.fetch();
-	        console.log(serverData);
+
 	        return {
 	            // 登录的用户
 	            user: serverData.user,
 	            // 用户列表
-	            userlist: serverData.userlist
+	            userList: serverData.userList,
+	            // 会话列表
+	            sessionList: serverData.sessionList,
+	            // 搜索key
+	            search: '',
+	            //选中的会话
+	            sessionIndex: 0
 	        };
 	    },
 
+	    computed: {
+	        session: function session() {
+	            return this.sessionList[this.sessionIndex];
+	        }
+	    },
 	    components: {
 	        // 引用的组件 在这里注册 不然不能用
-	        card: _card2.default, list: _list2.default
+	        card: _card2.default, list: _list2.default, message: _message2.default, text: _text2.default
 	    }
 
 	};
+
 	// </script>
 	//
 	// <template>
@@ -10916,9 +10936,12 @@
 	//     <div class="main">
 	//         <div class="sideBar">
 	//             <card :user="user"></card>
-	//             <list :user="user" :userlist="userlist"></list>
+	//             <list :user="user" :user-list="userList" :session="session" :session-index.sync="sessionIndex"></list>
 	//         </div>
-	//
+	// 		<div class="mainContent">
+	// 			<message :session="session" :user="user" :user-list="userList" :session-list="sessionList"></message>
+	//             <text :session="session"></text>
+	// 		</div>
 	//     </div>
 	// </template>
 	// <style type="text/less">
@@ -10938,19 +10961,33 @@
 	//             list-style: none;
 	//         }
 	// 		.sideBar{
-	// 				height:100%;
-	// 				width:200px;
-	// 				float: left;
-	// 				bottom:0;
-	// 				left:0;
-	// 			}
+	// 			height:100%;
+	// 			width:200px;
+	// 			float: left;
+	// 			bottom:0;
+	// 			left:0;
+	// 			background: #000;
+	// 		}
+	//         .m-text {
+	//             position: absolute;
+	//             width: 100%;
+	//             bottom: 0;
+	//             left: 0;
+	//         }
+	//         .m-message {
+	//             height: 440px;
+	//         }
+	//         .mainContent {
+	//             position: relative;
+	//             overflow: hidden;
+	//             background-color: #eee;
+	//         }
 	// 		.main{
 	// 			margin: 20px auto;
 	// 	        width: 800px;
 	// 	    	height: 600px;
 	// 			overflow: hidden;
 	// 			border-radius:3px;
-	//
 	//
 	// 		}
 	//
@@ -10974,110 +11011,51 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	/*// const 定义一个常量
-	const key="VUE-CHAT-v3"
-	if(!localStorage.getItem(key)){
-		let now =new Date();
-		let dataNum = {
-	        // 登录的用户
-			user:{
-				id:1,
-				name:'慧慧',
-				img:'dist/images/1.jpg'
-			},
-	        // 用户的列表
-	        userlist:[
-	            {
-	                id:2,
-	                name:'小李',
-	                img:'dist/images/2.jpg'
-	            },
-	            {
-	                id:3,
-	                name:'小王',
-	                img:'dist/images/3.jpg'
-	            }
-	        ],
-	        // 会话的列表
-	        sessionList:[
-	            {
-	                userId:2,
-	                messages:[
-	                    {
-	                        text:'这是一个Vue es6 webpack 写的聊天室',
-	                        data:"2017.3.24"
-	                    },
-	                    {
-	                        text:'你好',
-	                        data:"2017.3.25"
-	                    }
-	                ]
-	            },
-	            {
-	                userId:3,
-	                messages:[]
-	            }
-	        ],
+	// const 定义一个常量
 
-		}
-		localStorage.setItem(key,JSON.stringify(dataNum))
-	}
-	// 导出两个方法
-	export default{
-	   fetch() {
-	        // console.log(JSON.parse(localStorage.getItem(key)))
-	   		return JSON.parse(localStorage.getItem(key));
-
-	        // return dataNum;
-	   },
-	   save(store){
-	        localStorage.setItem(key,JSON.stringify(store));
-	   }
-	}
-	*/
 	var key = 'VUE-CHAT-v3';
 
 	// 虚拟数据
-	if (!localStorage.getItem(key)) {
-	    var now = new Date();
+	// if (!localStorage.getItem(key)) {
+	var now = new Date();
 
-	    var data = {
-	        // 登录用户
-	        user: {
-	            id: 1,
-	            name: 'Coffce',
-	            img: 'dist/images/1.jpg'
-	        },
+	var data = {
+	    // 登录用户
+	    user: {
+	        id: 1,
+	        name: 'Coffce',
+	        img: 'dist/images/1.jpg'
+	    },
 
-	        // 用户列表
-	        userList: [{
-	            id: 2,
-	            name: '站长素材',
-	            img: 'dist/images/2.png'
+	    // 用户列表
+	    userList: [{
+	        id: 2,
+	        name: '站长素材',
+	        img: 'dist/images/2.jpg'
+	    }, {
+	        id: 3,
+	        name: 'webpack',
+	        img: 'dist/images/3.jpg'
+	    }],
+
+	    // 会话列表
+	    sessionList: [{
+	        userId: 2,
+	        messages: [{
+	            text: 'Hello，这是一个基于Vue + Webpack构建的简单chat示例，聊天记录保存在localStorge。简单演示了Vue的基础特性和webpack配置。',
+	            date: now
 	        }, {
-	            id: 3,
-	            name: 'webpack',
-	            img: 'dist/images/3.jpg'
-	        }],
-
-	        // 会话列表
-	        sessionList: [{
-	            userId: 2,
-	            messages: [{
-	                text: 'Hello，这是一个基于Vue + Webpack构建的简单chat示例，聊天记录保存在localStorge。简单演示了Vue的基础特性和webpack配置。',
-	                date: now
-	            }, {
-	                text: '很简单的一个例子',
-	                date: now
-	            }]
-	        }, {
-	            userId: 3,
-	            messages: []
+	            text: '很简单的一个例子',
+	            date: now
 	        }]
-	    };
+	    }, {
+	        userId: 3,
+	        messages: []
+	    }]
+	};
 
-	    localStorage.setItem(key, (0, _stringify2.default)(data));
-	}
+	localStorage.setItem(key, (0, _stringify2.default)(data));
+	// }
 
 	exports.default = {
 	    fetch: function fetch() {
@@ -11168,7 +11146,7 @@
 
 
 	// module
-	exports.push([module.id, "\n\t.m-card{\n\t\tpadding:10px;\n\t\tborder-bottom:1px solid #dedede;\n\n\t}\n\theader{\n\t\tpadding-bottom: 10px;\n\t}\n\t.headImg{\n\t\tborder-radius:2px;\n\t}\n\t.headImg,.nickName{\n\t\tvertical-align: middle;\n\t}\n\n\t.nickName{\n\t\tdisplay:inline-block;\n\t\tmargin-bottom: 15px;\n\t\tfont-size: 16px;\n\n\t}\n\t.searchUser{\n\t\tpadding:0 10px;\n\t\twidth: 100%;\n\t\tfont-size: 12px;\n\t\tcolor: #fff;\n\t\theight: 30px;\n\t\tline-height: 30px;\n\t\tborder-radius:4px;\n\t\toutline:none;\n\t\tbackground-color: #26292E;\n\t}\n\n", ""]);
+	exports.push([module.id, "\n\t.m-card{\n\t\tpadding:10px;\n\t\tborder-bottom:1px solid #dedede;\n\n\t}\n\theader{\n\t\tpadding-bottom: 10px;\n\t}\n\t.headImg{\n\t\tborder-radius:2px;\n\t}\n\t.headImg,.nickName{\n\t\tvertical-align: middle;\n\t}\n\n\t.nickName{\n\t\tdisplay:inline-block;\n\t\tmargin-bottom: 15px;\n\t\tfont-size: 16px;\n\n\t}\n\t.searchUser{\n\t\tpadding:0 10px;\n\t\twidth: 100%;\n\t\tfont-size: 12px;\n\t\tcolor: #fff;\n\t\theight: 30px;\n\t\tline-height: 30px;\n\t\tborder-radius:4px;\n\t\toutline:none;\n\t\tborder:0;\n\t\tbackground-color: #26292E;\n\t}\n\n", ""]);
 
 	// exports
 
@@ -11230,6 +11208,7 @@
 	// 		line-height: 30px;
 	// 		border-radius:4px;
 	// 		outline:none;
+	// 		border:0;
 	// 		background-color: #26292E;
 	// 	}
 	//
@@ -11246,8 +11225,9 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var __vue_script__, __vue_template__
-	__vue_script__ = __webpack_require__(19)
-	__vue_template__ = __webpack_require__(20)
+	__webpack_require__(19)
+	__vue_script__ = __webpack_require__(21)
+	__vue_template__ = __webpack_require__(22)
 	module.exports = __vue_script__ || {}
 	if (module.exports.__esModule) module.exports = module.exports.default
 	if (__vue_template__) { (typeof module.exports === "function" ? module.exports.options : module.exports).template = __vue_template__ }
@@ -11265,6 +11245,46 @@
 
 /***/ },
 /* 19 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(20);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(7)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/vue-loader/lib/style-rewriter.js?id=_v-00e3d451&file=list.vue!../../node_modules/vue-loader/lib/selector.js?type=style&index=0!./list.vue", function() {
+				var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/vue-loader/lib/style-rewriter.js?id=_v-00e3d451&file=list.vue!../../node_modules/vue-loader/lib/selector.js?type=style&index=0!./list.vue");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 20 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(6)();
+	// imports
+
+
+	// module
+	exports.push([module.id, "\n\n.m-list li {\n        padding: 12px 15px;\n        border-bottom: 1px solid #292C33;\n        cursor: pointer;\n        -webkit-transition: background-color .1s;\n        transition: background-color .1s;\n\n\n    }\n.m-list li:hover {\n    background-color: rgba(255, 255, 255, 0.03);\n}\n\n .m-list li.active {\n    background-color: rgba(255, 255, 255, 0.1);\n}\n.avatar, .name {\n    vertical-align: middle;\n}\n.avatar {\n\twidth:20px;\n\theight: 20px;\n    border-radius: 2px;\n}\n.name {\n    display: inline-block;\n    margin: 0 0 0 15px;\n}\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 21 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -11274,33 +11294,394 @@
 	});
 	// <script>
 	exports.default = {
-		props: ['userlist', 'user']
+		props: ['userList', 'user']
 
 	};
 	// </script>
 	// <template>
 	// 	<div class="m-list">
 	// 		<ul>
-	// 			<li v-for="item in userlist" >
-	// 				<span>ssji</span>
-	// 				<img :src="item.img"/>
+	// 			<li v-for="item in userList" >
+	// 				<img class="avatar" :src="item.img"/>
 	// 				<p class="name">{{ item.name }}</p>
 	// 			</li>
 	// 		</ul>
 	// 	</div>
 	// </template>
+	// <style type="text/less">
+	//
+	// .m-list li {
+	//         padding: 12px 15px;
+	//         border-bottom: 1px solid #292C33;
+	//         cursor: pointer;
+	//         transition: background-color .1s;
+	//
+	//
+	//     }
+	// .m-list li:hover {
+	//     background-color: rgba(255, 255, 255, 0.03);
+	// }
+	//
+	//  .m-list li.active {
+	//     background-color: rgba(255, 255, 255, 0.1);
+	// }
+	// .avatar, .name {
+	//     vertical-align: middle;
+	// }
+	// .avatar {
+	// 	width:20px;
+	// 	height: 20px;
+	//     border-radius: 2px;
+	// }
+	// .name {
+	//     display: inline-block;
+	//     margin: 0 0 0 15px;
+	// }
+	// </style>
+	//
 
 /***/ },
-/* 20 */
+/* 22 */
 /***/ function(module, exports) {
 
-	module.exports = "\n\t<div class=\"m-list\">\n\t\t<ul>\n\t\t\t<li v-for=\"item in userlist\" >\n\t\t\t\t<span>ssji</span>\n\t\t\t\t<img :src=\"item.img\"/>\n\t\t\t\t<p class=\"name\">{{ item.name }}</p>\n\t\t\t</li>\n\t\t</ul>\n\t</div>\n";
+	module.exports = "\n\t<div class=\"m-list\">\n\t\t<ul>\n\t\t\t<li v-for=\"item in userList\" >\n\t\t\t\t<img class=\"avatar\" :src=\"item.img\"/>\n\t\t\t\t<p class=\"name\">{{ item.name }}</p>\n\t\t\t</li>\n\t\t</ul>\n\t</div>\n";
 
 /***/ },
-/* 21 */
+/* 23 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __vue_script__, __vue_template__
+	__webpack_require__(24)
+	__vue_script__ = __webpack_require__(26)
+	__vue_template__ = __webpack_require__(27)
+	module.exports = __vue_script__ || {}
+	if (module.exports.__esModule) module.exports = module.exports.default
+	if (__vue_template__) { (typeof module.exports === "function" ? module.exports.options : module.exports).template = __vue_template__ }
+	if (false) {(function () {  module.hot.accept()
+	  var hotAPI = require("vue-hot-reload-api")
+	  hotAPI.install(require("vue"), true)
+	  if (!hotAPI.compatible) return
+	  var id = "/Users/leilei/Projects/jyb_lianxi/vuechat/src/components/message.vue"
+	  if (!module.hot.data) {
+	    hotAPI.createRecord(id, module.exports)
+	  } else {
+	    hotAPI.update(id, module.exports, __vue_template__)
+	  }
+	})()}
+
+/***/ },
+/* 24 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(25);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(7)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/vue-loader/lib/style-rewriter.js?id=_v-5beaad24&file=message.vue!../../node_modules/vue-loader/lib/selector.js?type=style&index=0!./message.vue", function() {
+				var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/vue-loader/lib/style-rewriter.js?id=_v-5beaad24&file=message.vue!../../node_modules/vue-loader/lib/selector.js?type=style&index=0!./message.vue");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 25 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(6)();
+	// imports
+
+
+	// module
+	exports.push([module.id, "\n.m-message{\n\tpadding:10px 15px;\n\toverflow-y: scroll;\n}\n.m-message li{\n\tmargin-bottom: 15px;\n}\n.m-message .time{\n\tmargin:7px 0;\n\ttext-align:center;\n}\n.m-message .time>span{\n\tdisplay: inline-block;\n\tpadding:0 18px;\n\tfont-size:12px;\n\tcolor:#fff;\n\tborder-radius:2px;\n\tbackground-color: #dcdcdc;\n}\n.m-message .avatar{\n\tfloat: left;\n\tmargin:0 10px 0 0;\n\tborder-radius:3px;\n}\n.m-message .text{\n\tdisplay: inline-block;\n    position: relative;\n    padding: 0 10px;\n    max-width: 500px;\n    min-height: 30px;\n    line-height: 2.5;\n    font-size: 12px;\n    text-align: left;\n    word-break: break-all;\n    background-color: #fafafa;\n    border-radius: 4px;\n\n}\n.m-message .text:before{\n\tcontent: \" \";\n\tposition:absolute;\n\ttop:9px;\n\tright:100%;\n\tborder:6px solid transparent;\n\tborder-right-color:#fafafa;\n}\n.self {\n    text-align: right;\n}\n.self .avatar {\n    float: right;\n    margin: 0 0 0 10px;\n}\n.self .text {\n\tbackground-color: #b2e281;\n}\n.self .text:before {\n    right: inherit;\n    left: 100%;\n    border-right-color: transparent;\n    border-left-color: #b2e281;\n}\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 26 */
 /***/ function(module, exports) {
 
-	module.exports = "\n<!-- 模板里面 组件是驼峰的 在这里要转成 sss-sss -->\n    <div class=\"main\">\n        <div class=\"sideBar\">\n            <card :user=\"user\"></card>\n            <list :user=\"user\" :userlist=\"userlist\"></list>\n        </div>\n\n    </div>\n";
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	// <script>
+	exports.default = {
+		props: ['session', "user", "userList"],
+		//实时的计算 当对象的某一个值发生变化时 会实时的计算
+		computed: {
+			sessionUser: function sessionUser() {
+				var _this = this;
+
+				var users = this.userList.filter(function (item) {
+					return item.id === _this.session.userId;
+				});
+				return users[0];
+			}
+		},
+		filters: {
+			avatar: function avatar(item) {
+				// 如果是自己发送的消息 显示登录者的头像
+				var user = item.self ? this.user : this.sessionUser;
+				return user && user.img;
+			},
+			time: function time(data) {
+
+				if (typeof data === 'string') {
+					data = new Date(data);
+					return data.getHours() + ":" + data.getMinutes();
+				}
+			}
+		},
+		directives: {
+			'scroll-bottom': function scrollBottom() {
+				var _this2 = this;
+
+				Vue.nextTick(function () {
+					_this2.el.scrollTop = _this2.el.scrollHeight - _this2.el.clientHeight;
+				});
+			}
+		}
+	};
+	// </script>
+	// <template>
+	// <div class="m-message" v-scroll-bottom="session.messages">
+	// 	<ul>
+	// 		<li v-for="item in session.messages">
+	// 			<p class="time"><span>{{item.date | time}}</span></p>
+	// 			<div class="mainMessage" :class="{ self: item.self }">
+	// 				<img class="avatar" width="30" height="30" :src="item | avatar">
+	// 				<div class="text">
+	// 					{{ item.text }}
+	// 				</div>
+	// 			</div>
+	// 		</li>
+	// 	</ul>
+	// </div>
+	// </template>
+	// <style  type="text/less">
+	// .m-message{
+	// 	padding:10px 15px;
+	// 	overflow-y: scroll;
+	// }
+	// .m-message li{
+	// 	margin-bottom: 15px;
+	// }
+	// .m-message .time{
+	// 	margin:7px 0;
+	// 	text-align:center;
+	// }
+	// .m-message .time>span{
+	// 	display: inline-block;
+	// 	padding:0 18px;
+	// 	font-size:12px;
+	// 	color:#fff;
+	// 	border-radius:2px;
+	// 	background-color: #dcdcdc;
+	// }
+	// .m-message .avatar{
+	// 	float: left;
+	// 	margin:0 10px 0 0;
+	// 	border-radius:3px;
+	// }
+	// .m-message .text{
+	// 	display: inline-block;
+	//     position: relative;
+	//     padding: 0 10px;
+	//     max-width: 500px;
+	//     min-height: 30px;
+	//     line-height: 2.5;
+	//     font-size: 12px;
+	//     text-align: left;
+	//     word-break: break-all;
+	//     background-color: #fafafa;
+	//     border-radius: 4px;
+	//
+	// }
+	// .m-message .text:before{
+	// 	content: " ";
+	// 	position:absolute;
+	// 	top:9px;
+	// 	right:100%;
+	// 	border:6px solid transparent;
+	// 	border-right-color:#fafafa;
+	// }
+	// .self {
+	//     text-align: right;
+	// }
+	// .self .avatar {
+	//     float: right;
+	//     margin: 0 0 0 10px;
+	// }
+	// .self .text {
+	// 	background-color: #b2e281;
+	// }
+	// .self .text:before {
+	//     right: inherit;
+	//     left: 100%;
+	//     border-right-color: transparent;
+	//     border-left-color: #b2e281;
+	// }
+	// </style>
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+
+/***/ },
+/* 27 */
+/***/ function(module, exports) {
+
+	module.exports = "\n<div class=\"m-message\" v-scroll-bottom=\"session.messages\">\n\t<ul>\n\t\t<li v-for=\"item in session.messages\">\n\t\t\t<p class=\"time\"><span>{{item.date | time}}</span></p>\n\t\t\t<div class=\"mainMessage\" :class=\"{ self: item.self }\">\n\t\t\t\t<img class=\"avatar\" width=\"30\" height=\"30\" :src=\"item | avatar\">\n\t\t\t\t<div class=\"text\">\n\t\t\t\t\t{{ item.text }}\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</li>\n\t</ul>\n</div>\n";
+
+/***/ },
+/* 28 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __vue_script__, __vue_template__
+	__webpack_require__(29)
+	__vue_script__ = __webpack_require__(31)
+	__vue_template__ = __webpack_require__(32)
+	module.exports = __vue_script__ || {}
+	if (module.exports.__esModule) module.exports = module.exports.default
+	if (__vue_template__) { (typeof module.exports === "function" ? module.exports.options : module.exports).template = __vue_template__ }
+	if (false) {(function () {  module.hot.accept()
+	  var hotAPI = require("vue-hot-reload-api")
+	  hotAPI.install(require("vue"), true)
+	  if (!hotAPI.compatible) return
+	  var id = "/Users/leilei/Projects/jyb_lianxi/vuechat/src/components/text.vue"
+	  if (!module.hot.data) {
+	    hotAPI.createRecord(id, module.exports)
+	  } else {
+	    hotAPI.update(id, module.exports, __vue_template__)
+	  }
+	})()}
+
+/***/ },
+/* 29 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(30);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(7)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/vue-loader/lib/style-rewriter.js?id=_v-74dc8960&file=text.vue!../../node_modules/vue-loader/lib/selector.js?type=style&index=0!./text.vue", function() {
+				var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/vue-loader/lib/style-rewriter.js?id=_v-74dc8960&file=text.vue!../../node_modules/vue-loader/lib/selector.js?type=style&index=0!./text.vue");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 30 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(6)();
+	// imports
+
+
+	// module
+	exports.push([module.id, "\n\t.m-text{\n\t\theight: 160px;\n        border-top: solid 1px #ddd;\n\t}\n\ttextarea {\n        padding: 10px;\n        height: 100%;\n        width: 100%;\n        border: none;\n        outline: none;\n        font-family: \"Micrsofot Yahei\";\n        resize: none;\n    }\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 31 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	// <script>
+	exports.default = {
+		props: ['session'],
+		data: function data() {
+			return {
+				text: ''
+			};
+		},
+
+		methods: {
+			inputing: function inputing(e) {
+
+				if (e.ctrlKey && e.keyCode === 13 && this.text.length) {
+
+					this.session.messages.push({
+						text: this.text,
+						date: new Date(),
+						self: true
+					});
+					this.text = "";
+				} else if (!(e.keyCode === 13)) {
+					alert("请按 Ctrl +Enter");
+				}
+			}
+		}
+	};
+	// </script>
+	// <template>
+	// 	<div class="m-text">
+	// 		<textarea placeholder="按 Ctrl +Enter" v-model="text" @keyup="inputing">  </textarea>
+	// 	</div>
+	// </template>
+	// <style type="text/less">
+	// 	.m-text{
+	// 		height: 160px;
+	//         border-top: solid 1px #ddd;
+	// 	}
+	// 	textarea {
+	//         padding: 10px;
+	//         height: 100%;
+	//         width: 100%;
+	//         border: none;
+	//         outline: none;
+	//         font-family: "Micrsofot Yahei";
+	//         resize: none;
+	//     }
+	// </style>
+
+/***/ },
+/* 32 */
+/***/ function(module, exports) {
+
+	module.exports = "\n\t<div class=\"m-text\">\n\t\t<textarea placeholder=\"按 Ctrl +Enter\" v-model=\"text\" @keyup=\"inputing\">  </textarea>\n\t</div>\n";
+
+/***/ },
+/* 33 */
+/***/ function(module, exports) {
+
+	module.exports = "\n<!-- 模板里面 组件是驼峰的 在这里要转成 sss-sss -->\n    <div class=\"main\">\n        <div class=\"sideBar\">\n            <card :user=\"user\"></card>\n            <list :user=\"user\" :user-list=\"userList\" :session=\"session\" :session-index.sync=\"sessionIndex\"></list>\n        </div>\n\t\t<div class=\"mainContent\">\n\t\t\t<message :session=\"session\" :user=\"user\" :user-list=\"userList\" :session-list=\"sessionList\"></message>\n            <text :session=\"session\"></text>\n\t\t</div>\n    </div>\n";
 
 /***/ }
 /******/ ]);

@@ -4,6 +4,7 @@ import store from '../store.js'
 import card from './card.vue';
 import list from "./list.vue";
 import message from './message.vue';
+import text from './text.vue';
 // export default 等价于 new vue({})
 // data 页面中用到的数据
 //method 页面的事件
@@ -19,13 +20,23 @@ export default{
             user:serverData.user,
             // 用户列表
             userList:serverData.userList,
-            sessionList:serverData.sessionList
+            // 会话列表
+            sessionList:serverData.sessionList,
+            // 搜索key
+            search:'',
+            //选中的会话
+            sessionIndex:0
         };
 
     },
+    computed:{
+        session(){
+            return this.sessionList[this.sessionIndex]
+        }
+    },
     components:{
     	// 引用的组件 在这里注册 不然不能用
-        card,list,message
+        card,list,message,text
     }
 
 };
@@ -37,10 +48,11 @@ export default{
     <div class="main">
         <div class="sideBar">
             <card :user="user"></card>
-            <list :user="user" :user-list="userList"></list>
+            <list :user="user" :user-list="userList" :session="session" :session-index.sync="sessionIndex"></list>
         </div>
 		<div class="mainContent">
-			<message :session-list="sessionList"></message>
+			<message :session="session" :user="user" :user-list="userList" :session-list="sessionList"></message>
+            <text :session="session"></text>
 		</div>
     </div>
 </template>
@@ -61,20 +73,33 @@ export default{
             list-style: none;
         }
 		.sideBar{
-				height:100%;
-				width:200px;
-				float: left;
-				bottom:0;
-				left:0;
-				background: #000;
-			}
+			height:100%;
+			width:200px;
+			float: left;
+			bottom:0;
+			left:0;
+			background: #000;
+		}
+        .m-text {
+            position: absolute;
+            width: 100%;
+            bottom: 0;
+            left: 0;
+        }
+        .m-message {
+            height: 440px;
+        }
+        .mainContent {
+            position: relative;
+            overflow: hidden;
+            background-color: #eee;
+        }
 		.main{
 			margin: 20px auto;
 	        width: 800px;
 	    	height: 600px;
 			overflow: hidden;
 			border-radius:3px;
-
 
 		}
 
