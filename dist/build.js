@@ -54,11 +54,16 @@
 
 	var _app2 = _interopRequireDefault(_app);
 
+	var _lianxi = __webpack_require__(34);
+
+	var _lianxi2 = _interopRequireDefault(_lianxi);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	new _vue2.default({
 	    el: 'body',
 	    components: { App: _app2.default }
+	    // components:{ lianxi }
 	});
 
 /***/ },
@@ -10918,8 +10923,23 @@
 	    },
 
 	    computed: {
+	        //计算属性
 	        session: function session() {
 	            return this.sessionList[this.sessionIndex];
+	        }
+	    },
+	    watch: { //监控属性
+	        // 每当sessionList 改变时，保存到localStorage中
+	        sessionList: {
+	            // 深度观察
+	            deep: true,
+	            handler: function handler() {
+	                _store2.default.save({
+	                    user: this.user,
+	                    userList: this.userList,
+	                    sessionList: this.sessionList
+	                });
+	            }
 	        }
 	    },
 	    components: {
@@ -10935,11 +10955,11 @@
 	// <!-- 模板里面 组件是驼峰的 在这里要转成 sss-sss -->
 	//     <div class="main">
 	//         <div class="sideBar">
-	//             <card :user="user"></card>
-	//             <list :user="user" :user-list="userList" :session="session" :session-index.sync="sessionIndex"></list>
+	//             <card :user="user" :search.sync="search"></card>
+	//             <list :user="user" :user-list="userList" :search="search" :session="session" :session-index="sessionIndex"></list>
 	//         </div>
 	// 		<div class="mainContent">
-	// 			<message :session="session" :user="user" :user-list="userList" :session-list="sessionList"></message>
+	// 			<message :session="session" :user="user" :user-list="userList"></message>
 	//             <text :session="session"></text>
 	// 		</div>
 	//     </div>
@@ -11023,12 +11043,20 @@
 	    // 登录用户
 	    user: {
 	        id: 1,
-	        name: 'Coffce',
+	        name: '站长素材',
 	        img: 'dist/images/1.jpg'
 	    },
 
 	    // 用户列表
 	    userList: [{
+	        id: 2,
+	        name: '站长素材',
+	        img: 'dist/images/2.jpg'
+	    }, {
+	        id: 3,
+	        name: 'webpack',
+	        img: 'dist/images/3.jpg'
+	    }, {
 	        id: 2,
 	        name: '站长素材',
 	        img: 'dist/images/2.jpg'
@@ -11050,7 +11078,10 @@
 	        }]
 	    }, {
 	        userId: 3,
-	        messages: []
+	        messages: [{
+	            text: 'webpack配置',
+	            date: "13:57"
+	        }]
 	    }]
 	};
 
@@ -11163,7 +11194,7 @@
 	// <script>
 	//props的user  父组件引用子组件的时候 子组件里面的属性user="sa" 在子组件的methods的方法里面可以用this.user 获取到的user是在父组件app.vue定义了。可以用{{user}}获取到这个值
 	exports.default = {
-		props: ['user']
+		props: ['user', 'search']
 	};
 	// </script>
 	// <template>
@@ -11294,18 +11325,35 @@
 	});
 	// <script>
 	exports.default = {
-		props: ['userList', 'user']
+		props: ['userList', 'sessionIndex', 'session', 'search', 'searchList'],
+		methods: {
+			select: function select(value) {
+				this.sessionIndex = this.userList.indexOf(value);
+			}
+		},
+		filters: {
+			search: function search(list) {
+				var _this = this;
+
+				console.log(list);
+				return list.filter(function (item) {
+					return item.name.indexOf(_this.search) > -1;
+				});
+			}
+		}
 
 	};
 	// </script>
 	// <template>
 	// 	<div class="m-list">
 	// 		<ul>
-	// 			<li v-for="item in userList" >
+	// 			 <li v-for="item in userList | search" :class="{active: session.userId===item.id }" @click="select(item)">
 	// 				<img class="avatar" :src="item.img"/>
 	// 				<p class="name">{{ item.name }}</p>
 	// 			</li>
+	//
 	// 		</ul>
+	//
 	// 	</div>
 	// </template>
 	// <style type="text/less">
@@ -11344,7 +11392,7 @@
 /* 22 */
 /***/ function(module, exports) {
 
-	module.exports = "\n\t<div class=\"m-list\">\n\t\t<ul>\n\t\t\t<li v-for=\"item in userList\" >\n\t\t\t\t<img class=\"avatar\" :src=\"item.img\"/>\n\t\t\t\t<p class=\"name\">{{ item.name }}</p>\n\t\t\t</li>\n\t\t</ul>\n\t</div>\n";
+	module.exports = "\n\t<div class=\"m-list\">\n\t\t<ul>\n\t\t\t <li v-for=\"item in userList | search\" :class=\"{active: session.userId===item.id }\" @click=\"select(item)\">\n\t\t\t\t<img class=\"avatar\" :src=\"item.img\"/>\n\t\t\t\t<p class=\"name\">{{ item.name }}</p>\n\t\t\t</li>\n\n\t\t</ul>\n\n\t</div>\n";
 
 /***/ },
 /* 23 */
@@ -11643,8 +11691,6 @@
 						self: true
 					});
 					this.text = "";
-				} else if (!(e.keyCode === 13)) {
-					alert("请按 Ctrl +Enter");
 				}
 			}
 		}
@@ -11681,7 +11727,96 @@
 /* 33 */
 /***/ function(module, exports) {
 
-	module.exports = "\n<!-- 模板里面 组件是驼峰的 在这里要转成 sss-sss -->\n    <div class=\"main\">\n        <div class=\"sideBar\">\n            <card :user=\"user\"></card>\n            <list :user=\"user\" :user-list=\"userList\" :session=\"session\" :session-index.sync=\"sessionIndex\"></list>\n        </div>\n\t\t<div class=\"mainContent\">\n\t\t\t<message :session=\"session\" :user=\"user\" :user-list=\"userList\" :session-list=\"sessionList\"></message>\n            <text :session=\"session\"></text>\n\t\t</div>\n    </div>\n";
+	module.exports = "\n<!-- 模板里面 组件是驼峰的 在这里要转成 sss-sss -->\n    <div class=\"main\">\n        <div class=\"sideBar\">\n            <card :user=\"user\" :search.sync=\"search\"></card>\n            <list :user=\"user\" :user-list=\"userList\" :search=\"search\" :session=\"session\" :session-index=\"sessionIndex\"></list>\n        </div>\n\t\t<div class=\"mainContent\">\n\t\t\t<message :session=\"session\" :user=\"user\" :user-list=\"userList\"></message>\n            <text :session=\"session\"></text>\n\t\t</div>\n    </div>\n";
+
+/***/ },
+/* 34 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __vue_script__, __vue_template__
+	__vue_script__ = __webpack_require__(35)
+	__vue_template__ = __webpack_require__(36)
+	module.exports = __vue_script__ || {}
+	if (module.exports.__esModule) module.exports = module.exports.default
+	if (__vue_template__) { (typeof module.exports === "function" ? module.exports.options : module.exports).template = __vue_template__ }
+	if (false) {(function () {  module.hot.accept()
+	  var hotAPI = require("vue-hot-reload-api")
+	  hotAPI.install(require("vue"), true)
+	  if (!hotAPI.compatible) return
+	  var id = "/Users/leilei/Projects/jyb_lianxi/vuechat/src/components/lianxi.vue"
+	  if (!module.hot.data) {
+	    hotAPI.createRecord(id, module.exports)
+	  } else {
+	    hotAPI.update(id, module.exports, __vue_template__)
+	  }
+	})()}
+
+/***/ },
+/* 35 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _store = __webpack_require__(9);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	var _list = __webpack_require__(18);
+
+	var _list2 = _interopRequireDefault(_list);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	//
+	// <script>
+	exports.default = {
+		prop: ["userList"],
+		data: function data() {
+			var serverData = _store2.default.fetch();
+			return {
+				user: serverData.user,
+				userList: serverData.userList,
+				willShow: true,
+				search: 'hello'
+			};
+		},
+
+		methods: {
+			showHide: function showHide(e) {
+				if (this.willShow) {
+					this.willShow = false;
+				} else {
+					this.willShow = true;
+				}
+			}
+		},
+		components: {
+			list: _list2.default
+		}
+	};
+	// </script>
+	// <template>
+	// 	<div class="main">
+	// 		<span v-if="willShow">我要显示</span>
+	// 		<input type="text" v-model="search">
+	// 		<!-- <div>{{search}}</div> -->
+	// 		<span v-else="">隐藏</span>
+	// 		<div class="J_main" @click="showHide($event)">点我隐藏</div>
+	// 		<list :user-list="userList" :search="search"></list>
+	//
+	// 	</div>
+	//
+	// </template>
+
+/***/ },
+/* 36 */
+/***/ function(module, exports) {
+
+	module.exports = "\n\t<div class=\"main\">\n\t\t<span v-if=\"willShow\">我要显示</span>\n\t\t<input type=\"text\" v-model=\"search\">\n\t\t<!-- <div>{{search}}</div> -->\n\t\t<span v-else=\"\">隐藏</span>\n\t\t<div class=\"J_main\" @click=\"showHide($event)\">点我隐藏</div>\n\t\t<list :user-list=\"userList\" :search=\"search\"></list>\n\n\t</div>\n\n";
 
 /***/ }
 /******/ ]);

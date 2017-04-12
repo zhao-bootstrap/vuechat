@@ -13,8 +13,6 @@ export default{
     data () {
     	// 调用store 的方法
         let serverData = store.fetch();
-
-
         return {
         	// 登录的用户
             user:serverData.user,
@@ -29,9 +27,23 @@ export default{
         };
 
     },
-    computed:{
+    computed:{ //计算属性
         session(){
             return this.sessionList[this.sessionIndex]
+        }
+    },
+    watch:{ //监控属性
+        // 每当sessionList 改变时，保存到localStorage中
+        sessionList:{
+            // 深度观察
+            deep:true,
+            handler (){
+                store.save({
+                    user:this.user,
+                    userList:this.userList,
+                    sessionList:this.sessionList
+                })
+            }
         }
     },
     components:{
@@ -47,11 +59,11 @@ export default{
 <!-- 模板里面 组件是驼峰的 在这里要转成 sss-sss -->
     <div class="main">
         <div class="sideBar">
-            <card :user="user"></card>
-            <list :user="user" :user-list="userList" :session="session" :session-index.sync="sessionIndex"></list>
+            <card :user="user" :search.sync="search"></card>
+            <list :user="user" :user-list="userList" :search="search" :session="session" :session-index="sessionIndex"></list>
         </div>
 		<div class="mainContent">
-			<message :session="session" :user="user" :user-list="userList" :session-list="sessionList"></message>
+			<message :session="session" :user="user" :user-list="userList"></message>
             <text :session="session"></text>
 		</div>
     </div>

@@ -1,7 +1,7 @@
 <script>
 //props的user  父组件引用子组件的时候 子组件里面的属性user="sa" 在子组件的methods的方法里面可以用this.user 获取到的user是在父组件app.vue定义了。可以用{{user}}获取到这个值
 	export default{
-		props:['user']
+		props:['user','search']
 	};
 </script>
 <template>

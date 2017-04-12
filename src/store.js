@@ -10,12 +10,22 @@ const key = 'VUE-CHAT-v3';
         // 登录用户
         user: {
             id: 1,
-            name: 'Coffce',
+            name: '站长素材',
             img: 'dist/images/1.jpg'
         },
 
         // 用户列表
         userList: [
+            {
+                id: 2,
+                name: '站长素材',
+                img: 'dist/images/2.jpg'
+            },
+            {
+                id: 3,
+                name: 'webpack',
+                img: 'dist/images/3.jpg'
+            },
             {
                 id: 2,
                 name: '站长素材',
@@ -45,7 +55,10 @@ const key = 'VUE-CHAT-v3';
             },
             {
                 userId: 3,
-                messages: []
+                messages: [ {
+                        text: 'webpack配置',
+                        date:"13:57"
+                    }]
             }
         ]
     };

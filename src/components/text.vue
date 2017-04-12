@@ -17,8 +17,6 @@
 						self:true
 					});
 					this.text="";
-				}else if(!(e.keyCode ===13)){
-					alert("请按 Ctrl +Enter")
 				}
 			}
 		}

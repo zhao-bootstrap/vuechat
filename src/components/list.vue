@@ -1,17 +1,31 @@
 <script>
 	export default{
-		props:['userList','user']
+		props:['userList','sessionIndex','session','search','searchList'],
+		methods:{
+			select(value){
+				this.sessionIndex=this.userList.indexOf(value);
+
+			}
+		},
+		filters:{
+			search(list){
+				console.log(list);
+				return list.filter(item => item.name.indexOf(this.search)>-1);
+			}
+		}
 
 	};
 </script>
 <template>
 	<div class="m-list">
 		<ul>
-			<li v-for="item in userList" >
+			 <li v-for="item in userList | search" :class="{active: session.userId===item.id }" @click="select(item)">
 				<img class="avatar" :src="item.img"/>
 				<p class="name">{{ item.name }}</p>
 			</li>
+
 		</ul>
+
 	</div>
 </template>
 <style type="text/less">
